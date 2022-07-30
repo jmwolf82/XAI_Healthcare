@@ -27,6 +27,10 @@ Dataset:  https://github.com/DeepPathology/MITOS_WSI_CMC
 
 ### Open Issues/Questions/Concerns:
 
-- []
-- []
-- []
+- [ ] Contact authors of dataset
+- [ ] Investigate how expert text annotations on dataset images were implemented
+- [ ] Modify expert text annotations on images for easier readability
+- [ ] Is this the dataset complete?
+- [ ] Are there other datasets that could be used for testing?
+- [ ] Is the dataset balanced?
+- [ ] What level of Explainability can be best implemented?
