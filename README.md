@@ -10,7 +10,8 @@ Members:
  - Jordan Wolf
 
 ### Data Lineage
- 
+
+Paper: https://www.nature.com/articles/s41597-020-00756-z  
 Dataset:  https://github.com/DeepPathology/MITOS_WSI_CMC
 
 ### References:
