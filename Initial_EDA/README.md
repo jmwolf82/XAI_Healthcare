@@ -23,6 +23,11 @@
 - [ ] Run RetinaNet-CMC-ODAEL.ipynb
 - [ ] Run RetinaNet-CMC-CODAEL.ipynb
 
+## Annotations
+
+- [x] Annotations include coordinate date 
+- [x] Annotations include text annotation (description)
+
 ## TOOL: SlideRunner
 
 - [x] Run SlideRunner Demo Walkthrough notebook
@@ -36,7 +41,7 @@ SliderRunner Demo walkthrough notebook shows that human readable descriptions we
 - [ ] Address Errors encountered when attempting to run notebooks
 - [ ] fast.ai.callbacks producing ModuleNotFoundError
 - [ ] Address NameError: name 'Patch' is not defined in RetinaNet nb's
-
+- [ ] Understand annotation/image correlation
 
 
 
