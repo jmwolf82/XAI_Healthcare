@@ -35,6 +35,13 @@
 
 SliderRunner Demo walkthrough notebook shows that human readable descriptions were provided along with the annotations. However these human readable annotations do not describe in such a way as to report to a patient. 
 
+## TOOL: QuPath 
+
+- [x] Install QuPath 
+- [x] Manually look at WSI .svs files
+
+![Alt text][https://github.com/jmwolf82/XAI_Healthcare/blob/main/Initial_EDA/images/qupath_wsi_ex.odg]
+
 
 ## Issues/Challenges/Questions
 
