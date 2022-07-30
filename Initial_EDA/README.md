@@ -40,7 +40,7 @@ SliderRunner Demo walkthrough notebook shows that human readable descriptions we
 - [x] Install QuPath 
 - [x] Manually look at WSI .svs files
 
-![QuPath WSI](/images/qupath_wsi_ex.odg)
+![QuPath WSI](https://github.com/jmwolf82/XAI_Healthcare/blob/main/Initial_EDA/images/qupath_wsi_ex.odg)
 
 
 ## Issues/Challenges/Questions
