@@ -5,7 +5,7 @@ Project: Automating Explainability in Healthcare
 Team: Bender
 Members:
  - Arvinder Singh
- - Valentina Montessona
+ - Valentina Montesano
  - Jordan Wolf
  
 Dataset:  https://github.com/DeepPathology/MITOS_WSI_CMC
