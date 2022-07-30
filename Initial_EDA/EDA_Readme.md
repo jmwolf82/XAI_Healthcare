@@ -1,4 +1,4 @@
-#EDA Read Me Notes
+# EDA Read Me Notes
 
 1. System: Ubuntu 22.04
 2. Data Repo: https://github.com/DeepPathology/MITOS_WSI_CMC
