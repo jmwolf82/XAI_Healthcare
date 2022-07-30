@@ -2,7 +2,7 @@
 
 1. System: Ubuntu 22.04
 2. Data Repo: https://github.com/DeepPathology/MITOS_WSI_CMC
-3. Data Repo: https://github.com/DeepPathology/SlideRunner.git
+3. Tool Repo: https://github.com/DeepPathology/SlideRunner.git
 
 ## Conda Environment Dependencies
 
