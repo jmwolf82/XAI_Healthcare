@@ -10,4 +10,4 @@
 - conda install pytorch torchvision torchaudio cudatoolkit=11.3 -c pytorch
 - sudo apt-get install openslide-tools
 - pip install openslide-python
-
+SliderRunner Demo walkthrough notebook shows that human readable descriptions were provided along with the annotations. However these human readable annotations do not describe in such a way as to report to a patient. 
