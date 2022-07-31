@@ -5,6 +5,7 @@
 - [x] Install SQLite Viewer app 
 - [x] Download SQLite db files
 - [x] conda install -c anaconda sqlite
+- [x] conda install -c anaconda pandas
 
 ## Overview:
 
