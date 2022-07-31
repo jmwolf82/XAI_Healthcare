@@ -36,7 +36,7 @@ Dataset contains 21 WSI images. The images are processed and broken down to crea
 
 - [ ] Investigate further the classes of the datasets. 
 
-### COADEL:
+#### COADEL:
 
 - 5 Classes:
 	- Mitotic cell look-alike
@@ -44,7 +44,7 @@ Dataset contains 21 WSI images. The images are processed and broken down to crea
 	- Tumor Regio
 	- Exclude from Tumor Region
 
-### ODAEL:
+#### ODAEL:
 
 - 5 Classes:
 	- Mitotic cell look-alike
@@ -52,7 +52,7 @@ Dataset contains 21 WSI images. The images are processed and broken down to crea
 	- Tumor Region
 	- Exclude from Tumor Region
 
-### MEL:
+#### MEL:
 
 - 3 Classes:
 	- Mitotic cell look-alike
