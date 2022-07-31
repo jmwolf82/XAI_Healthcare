@@ -8,7 +8,7 @@
 
 ## Overview:
 
-Dataset contains 21 WSI images. The images are processed and broken down to create the various datasets. Each dataset has different features stored in SQLite tables. Each of the tables contain different sets of "features" pertaining to the table and correlating to the WSIs. 
+Dataset contains 21 WSI images. The images are processed and broken down to create the various datasets. Each dataset has different features stored in SQLite tables. Each of the tables contain different sets of "features" pertaining to the table and correlating to the WSIs. The purpose of the notebooks is to convert the SQLite data from the DB Tables into Pandas dataframes for EDA.  
 
 ## SQLite DB Table Layout:
 
@@ -21,4 +21,6 @@ Dataset contains 21 WSI images. The images are processed and broken down to crea
 - Persons
 - Slides
 
- 
+## Findings:
+
+TBD  
