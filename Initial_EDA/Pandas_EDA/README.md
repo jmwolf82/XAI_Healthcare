@@ -31,24 +31,29 @@ Dataset contains 21 WSI images. The images are processed and broken down to crea
 
 ## Findings:
 
+- The assumption is that the missing class is a non-detection? The database was missing a class. 
+- The COADEL and ODAEL datasets have the same amount of classes though the MEL dataset does not. 
+
+- [ ] Investigate further the classes of the datasets. 
+
 ### COADEL:
 
 - 5 Classes:
-	1. Mitotic cell look-alike
-	2. Mitotic Figure
-	4. Tumor Regio
-	5. Exclude from Tumor Region
+	- Mitotic cell look-alike
+	- Mitotic Figure
+	- Tumor Regio
+	- Exclude from Tumor Region
 
 ### ODAEL:
 
 - 5 Classes:
-	1. Mitotic cell look-alike
-	2. Mitotic Figure
-	4. Tumor Region
-	5. Exclude from Tumor Region
+	- Mitotic cell look-alike
+	- Mitotic Figure
+	- Tumor Region
+	- Exclude from Tumor Region
 
 ### MEL:
 
 - 3 Classes:
-	1. Mitotic cell look-alike
-	2. Mitotic Figure
+	- Mitotic cell look-alike
+	- Mitotic Figure
