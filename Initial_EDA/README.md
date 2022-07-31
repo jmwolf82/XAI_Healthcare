@@ -40,15 +40,17 @@ SliderRunner Demo walkthrough notebook shows that human readable descriptions we
 - [x] Install QuPath 
 - [x] Manually look at WSI .svs files
 
+The follow is an screen shot from the QuPath tool with a WSI displayed. 
+
 ![QuPath WSI](https://github.com/jmwolf82/XAI_Healthcare/blob/main/Initial_EDA/images/qupath_wsi_ex.tif)
 
 
 ## Issues/Challenges/Questions
 
 - [ ] Address Errors encountered when attempting to run notebooks
-- [ ] fast.ai.callbacks producing ModuleNotFoundError
+- [x] fast.ai.callbacks producing ModuleNotFoundError - fast.ai.callback fixed issue
 - [ ] Address NameError: name 'Patch' is not defined in RetinaNet nb's
-- [ ] Understand annotation/image correlation
+- [x] Understand annotation/image correlation - In process refer to Pands_EDA folder
 
 
 
