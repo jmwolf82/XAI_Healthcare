@@ -5,6 +5,7 @@
 - [x] Install SQLite Viewer app 
 - [x] Download SQLite db files
 - [x] conda install -c anaconda sqlite
+- [x] conda install -c anaconda pandas
 
 ## Overview:
 
@@ -12,9 +13,9 @@ Dataset contains 21 WSI images. The images are processed and broken down to crea
 
 ## Datasets:
 
-- [x] MEL-Manually labeled
-- [x] ODAEL-Augmented manually expert labelled
-- [x] CODAEL-Clustering and object detection augmented manually expert labeled variant
+- [x] MEL - Manually labeled
+- [x] ODAEL - Augmented manually expert labelled
+- [x] CODAEL - Clustering and object detection augmented manually expert labeled variant
 - [x] TUPAC
 
 ## SQLite DB Table Layout:
