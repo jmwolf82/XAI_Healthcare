@@ -14,6 +14,7 @@
 - [x] conda install pytorch torchvision torchaudio cudatoolkit=11.3 -c pytorch
 - [x] sudo apt-get install openslide-tools
 - [x] pip install openslide-python
+- [x] pip install object-detection-fastai
 
 ## DATA: MITOS_WSI_CMC
 
