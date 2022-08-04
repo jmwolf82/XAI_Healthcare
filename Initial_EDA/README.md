@@ -20,7 +20,7 @@
 - [x] Run Setup.ipynb to download data
 - [x] Run Evaluation.ipynb
 - [x] Run RetinaNet-CMC-MEL.ipynb
-- [ ] Run RetinaNet-CMC-ODAEL.ipynb
+- [x] Run RetinaNet-CMC-ODAEL.ipynb
 - [ ] Run RetinaNet-CMC-CODAEL.ipynb
 
 ## Annotations
