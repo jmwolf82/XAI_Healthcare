@@ -21,7 +21,7 @@
 - [x] Run Setup.ipynb to download data
 - [x] Run Evaluation.ipynb
 - [x] Run RetinaNet-CMC-MEL.ipynb
-- [ ] Run RetinaNet-CMC-ODAEL.ipynb
+- [x] Run RetinaNet-CMC-ODAEL.ipynb
 - [ ] Run RetinaNet-CMC-CODAEL.ipynb
 
 ## Annotations
@@ -48,9 +48,9 @@ The follow is an screen shot from the QuPath tool with a WSI displayed.
 
 ## Issues/Challenges/Questions
 
-- [ ] Address Errors encountered when attempting to run notebooks
+- [x] Address Errors encountered when attempting to run notebooks
 - [x] fast.ai.callbacks producing ModuleNotFoundError - fast.ai.callback fixed issue
-- [ ] Address NameError: name 'Patch' is not defined in RetinaNet nb's
+- [x] Address NameError: name 'Patch' is not defined in RetinaNet nb's
 - [x] Understand annotation/image correlation - In process refer to Pands_EDA folder
 
 
