@@ -22,7 +22,7 @@
 - [x] Run Evaluation.ipynb
 - [x] Run RetinaNet-CMC-MEL.ipynb
 - [x] Run RetinaNet-CMC-ODAEL.ipynb
-- [ ] Run RetinaNet-CMC-CODAEL.ipynb
+- [x] Run RetinaNet-CMC-CODAEL.ipynb
 
 ## Annotations
 
