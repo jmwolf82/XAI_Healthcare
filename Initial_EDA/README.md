@@ -14,13 +14,14 @@
 - [x] conda install pytorch torchvision torchaudio cudatoolkit=11.3 -c pytorch
 - [x] sudo apt-get install openslide-tools
 - [x] pip install openslide-python
+- [x] pip install object-detection-fastai
 
 ## DATA: MITOS_WSI_CMC
 
 - [x] Run Setup.ipynb to download data
 - [x] Run Evaluation.ipynb
-- [ ] Run RetinaNet-CMC-MEL.ipynb
-- [ ] Run RetinaNet-CMC-ODAEL.ipynb
+- [x] Run RetinaNet-CMC-MEL.ipynb
+- [x] Run RetinaNet-CMC-ODAEL.ipynb
 - [ ] Run RetinaNet-CMC-CODAEL.ipynb
 
 ## Annotations
@@ -47,9 +48,9 @@ The follow is an screen shot from the QuPath tool with a WSI displayed.
 
 ## Issues/Challenges/Questions
 
-- [ ] Address Errors encountered when attempting to run notebooks
+- [x] Address Errors encountered when attempting to run notebooks
 - [x] fast.ai.callbacks producing ModuleNotFoundError - fast.ai.callback fixed issue
-- [ ] Address NameError: name 'Patch' is not defined in RetinaNet nb's
+- [x] Address NameError: name 'Patch' is not defined in RetinaNet nb's
 - [x] Understand annotation/image correlation - In process refer to Pands_EDA folder
 
 
