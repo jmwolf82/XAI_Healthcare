@@ -25,6 +25,10 @@ Dataset:  https://github.com/DeepPathology/MITOS_WSI_CMC
 
 Repo: https://github.com/ChristianMarzahl/ObjectDetection
 
+### Data Clustering
+
+A series of notebooks leading the investigation of how to cluster the MITOSIS images into different categories for further annotations. 
+
 ### Data Records
 
 The dataset, consisting of 21 anonymized WSIs in Aperio SVS file format, is publicly available on figshare20. Alongside, we provide cell annotations according to both classes in a SQLite3 database. For each annotation, this database provides:
