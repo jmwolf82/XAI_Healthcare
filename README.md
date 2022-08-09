@@ -25,10 +25,6 @@ Dataset:  https://github.com/DeepPathology/MITOS_WSI_CMC
 
 Repo: https://github.com/ChristianMarzahl/ObjectDetection
 
-### Data Clustering
-
-A series of notebooks leading the investigation of how to cluster the MITOSIS images into different categories for further annotations. 
-
 ### Data Records
 
 The dataset, consisting of 21 anonymized WSIs in Aperio SVS file format, is publicly available on figshare20. Alongside, we provide cell annotations according to both classes in a SQLite3 database. For each annotation, this database provides:
@@ -43,6 +39,10 @@ The dataset, consisting of 21 anonymized WSIs in Aperio SVS file format, is publ
 
 - [x] Upload sqlite database files that contain annotations
 - [x] Investigate annotations - In process see /Initial_EDA/Pandas_EDA
+
+### Data Clustering
+
+A series of notebooks leading the investigation of how to cluster the MITOSIS images into different categories for further annotations. 
 
 ### References:
 - Aubreville, M., Bertram, C.A., Donovan, T.A. et al. A completely annotated whole slide image dataset of canine breast cancer to aid human breast cancer research. Sci Data 7, 417 (2020). https://doi.org/10.1038/s41597-020-00756-z
