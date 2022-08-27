@@ -7,9 +7,9 @@ Image Size: 128x128
 - [ ] Resnet152-
 <br>
 Image Size: 224x224
--[x] Resnet50(SGD)- Accuracy: 72.93%
--[x] Resnet50(Adam)- Accuracy: 72.99%
--[x] Resnet50(SGD, ImageNetV2 weights)- Accuracy: 
+- [x] Resnet50(SGD)- Accuracy: 72.93%
+- [x] Resnet50(Adam)- Accuracy: 72.99%
+- [x] Resnet50(SGD, ImageNetV2 weights)- Accuracy: 
 
 ### Notes
 
