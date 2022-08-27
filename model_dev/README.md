@@ -5,6 +5,7 @@ Image Size: 128x128
 - [x] Alexnet- Accuracy: 50.47%
 - [ ] EfficientNet-
 - [ ] Resnet152-
+<br>
 Image Size: 224x224
 -[x] Resnet50(SGD)- Accuracy: 72.93%
 -[x] Resnet50(Adam)- Accuracy: 72.99%
