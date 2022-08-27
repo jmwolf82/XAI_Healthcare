@@ -1,10 +1,14 @@
 ## Model Iteration
-
+Image Size: 128x128
 - [x] Resnet50- Accuracy: 72.89%
 - [x] Vgg16- Accuracy: 67.98%
 - [x] Alexnet- Accuracy: 50.47%
 - [ ] EfficientNet-
 - [ ] Resnet152-
+Image Size: 224x224
+-[x] Resnet50(SGD)- Accuracy: 72.93%
+-[x] Resnet50(Adam)- Accuracy: 72.99%
+-[x] Resnet50(SGD, ImageNetV2 weights)- Accuracy: 
 
 ### Notes
 
