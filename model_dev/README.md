@@ -16,10 +16,13 @@ Image Size: 224x224
 <br>
 Learning Rate Adjustment to 0.0001:
 <br>
+
 - [x] VGG16(SGD)- Accuracy: 73.33%
 
 <br>
 Reduced Data:
+<br>
+
 - [x] VGG16(SGD, LR=0.0001): 71.25% 
 
 ### Notes
