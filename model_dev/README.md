@@ -25,9 +25,14 @@
 
 - [x] VGG16(SGD, LR=0.0001): 71.25% 
 
-<br>
+
 ### Image Size: 64x64
- 
+
+#### Reduced Dataset
+- [x] Resnet18(Pretrained Imagenet_V1, SGD, LR=0.001): 83.13%
+- [x] Resnet34(SGD, LR=0.001): 81.42%
+- [x] Resnet50(SGD, LR=0.001): 76.15%
+- [x] Resnet50(Pretrained Imagenet_V2, SGD, LR=0.001): 84.18% 
 
 ### Notes
 
