@@ -34,6 +34,7 @@
 #### Full Dataset:
 - [x] Resnet50(Pretrained Imagenet_V2, SGD, LR=0.001): 87.75%
 - [x] VGG16(Pretrained Imagenet_V2, SGD, LR=0.001): 88.33%
+- [x] HF Vision Tranformer(ViTModel, Adam, LR=2e-5): ~90%
 
 ### Notes
 
