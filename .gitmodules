@@ -1,0 +1,3 @@
+[submodule "xai_healthcare_docker_v2"]
+	path = xai_healthcare_docker_v2
+	url = git@github.com:punjab/xai_healthcare_docker_v2.git
