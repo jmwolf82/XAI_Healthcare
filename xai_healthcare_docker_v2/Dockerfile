@@ -10,5 +10,6 @@ RUN set -xe \
     && apt-get update \
     && apt-get install python3-pip -y
 RUN pip install --upgrade pip
+RUN pip install torch --extra-index-url https://download.pytorch.org/whl/cu116
 RUN pip install -r ./requirements.txt
 CMD streamlit run vgg16_streamlit.py --server.port 80 --server.maxUploadSize 1024 --deprecation.showPyplotGlobalUse false
