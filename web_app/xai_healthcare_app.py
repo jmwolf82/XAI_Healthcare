@@ -49,7 +49,7 @@ st.title('Mitotic Figure Detection')
 #----------------------------------------------------------------------------
 #                         Check CUDA Device GPU vs CPU
 #----------------------------------------------------------------------------
-
+st.header("Device Verification")
 device = get_device()
 st.write('Device used is:', device )
 
@@ -70,10 +70,15 @@ def image_resize(image):
 
 st.header('Select a model to use')
 
-model_sel = st.radio(
-    "Select Model to Use",
-    ('Default','Resnet50', 'VGG16', 'ViT')
-    )
+model_sel = st.selectbox(
+    'Select a model to use:',
+    ('None','Resnet50','VGG16','ViT')
+)
+
+# model_sel = st.radio(
+#     "Select Model to Use",
+#     ('Default','Resnet50', 'VGG16', 'ViT')
+#     )
 
 if model_sel == 'Resnet50':
     model = rn50_model
@@ -110,6 +115,7 @@ if model_print:
 #                         Image Uploader
 #----------------------------------------------------------------------------
 
+
 st.header('Upload an image')
 
 file = st.file_uploader('Select Image File')
@@ -122,7 +128,6 @@ if file:
     width, height = image.size
     st.write(width, height)
     img_upload = True
-
 
 #----------------------------------------------------------------------------
 #                 Model Predictions
@@ -214,7 +219,59 @@ lime_button = st.button('Run Lime')
 #----------------------------------------------------------------------------
 if rn_pred == True and lime_button:
 
+        with st.spinner('Wait for it . . .'):
+            def batch_predict(images):
+                model.eval()
+                batch = torch.stack(tuple(preprocess_transform(i) for i in images), dim=0)
+
+                device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+                model.to(device)
+                batch = batch.to(device)
+                
+                logits = model(batch)
+                probs = F.softmax(logits, dim=1)
+                return probs.detach().cpu().numpy()
+
+            pill_transf = get_pil_transform()
+            preprocess_transform = get_preprocess_transform()
+
+            explainer = lime_image.LimeImageExplainer()
+            explanation = explainer.explain_instance(np.array(pill_transf(rn50_img)), 
+                                                    batch_predict, # classification function
+                                                    top_labels=5, 
+                                                    hide_color=0, 
+                                                    num_samples=1000)
+
+            temp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=True, num_features=2, hide_rest=False)
+            img_boundry1 = mark_boundaries(temp/255.0, mask)
+            temp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=False, num_features=2, hide_rest=False)
+            img_boundry2 = mark_boundaries(temp/255.0, mask)
+
+            # img_0 = Image.fromarray((img_boundry1 * 255).astype(np.uint8))
+            # st.image(img_0)
+
+            img_1 = Image.fromarray((img_boundry2 * 255).astype(np.uint8))
+            st.image(img_1)
+            img_1 = img_1.save("lime_vgg.png")
+
+            with open("lime_vgg.png", "rb") as file:
+                vgg_lime_dwnld = st.download_button('Download LIME Images',
+                            file,
+                            "lime_vgg.png",
+                            mime="image/png")
+        st.success('Done!')
+        # st.balloons()
+#----------------------------------------------------------------------------
+#                         VGG16 Lime
+#---------------------------------------------------------------------------- 
+
+if vgg_pred == True and lime_button:
+    
+    with st.spinner('Wait for it . . .'):
         def batch_predict(images):
+
+            preprocess_transform = get_preprocess_transform()
+
             model.eval()
             batch = torch.stack(tuple(preprocess_transform(i) for i in images), dim=0)
 
@@ -230,11 +287,11 @@ if rn_pred == True and lime_button:
         preprocess_transform = get_preprocess_transform()
 
         explainer = lime_image.LimeImageExplainer()
-        explanation = explainer.explain_instance(np.array(pill_transf(rn50_img)), 
-                                                 batch_predict, # classification function
-                                                 top_labels=5, 
-                                                 hide_color=0, 
-                                                 num_samples=1000)
+        explanation = explainer.explain_instance(np.array(pill_transf(image)), 
+                                                batch_predict, # classification function
+                                                top_labels=5, 
+                                                hide_color=0, 
+                                                num_samples=1000)
 
         temp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=True, num_features=2, hide_rest=False)
         img_boundry1 = mark_boundaries(temp/255.0, mask)
@@ -243,65 +300,18 @@ if rn_pred == True and lime_button:
 
         # img_0 = Image.fromarray((img_boundry1 * 255).astype(np.uint8))
         # st.image(img_0)
+        # img_0 = img_0.save("vgg_lime_0.png")
 
         img_1 = Image.fromarray((img_boundry2 * 255).astype(np.uint8))
         st.image(img_1)
-        img_1 = img_1.save("rn_lime_1.png")
-    
-        with open("rn_lime_1.png", "rb") as file:
-            vgg_lime_dwnld = st.download_button('Download LIME Images',
-                        file,
-                        "rn_lime_1.png",
-                        mime="image/png")
-#----------------------------------------------------------------------------
-#                         VGG16 Lime
-#---------------------------------------------------------------------------- 
-
-if vgg_pred == True and lime_button:
-    
-    def batch_predict(images):
-
-        preprocess_transform = get_preprocess_transform()
-
-        model.eval()
-        batch = torch.stack(tuple(preprocess_transform(i) for i in images), dim=0)
-
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        model.to(device)
-        batch = batch.to(device)
+        img_1 = img_1.save("vgg_lime_1.png")
         
-        logits = model(batch)
-        probs = F.softmax(logits, dim=1)
-        return probs.detach().cpu().numpy()
-
-    pill_transf = get_pil_transform()
-    preprocess_transform = get_preprocess_transform()
-
-    explainer = lime_image.LimeImageExplainer()
-    explanation = explainer.explain_instance(np.array(pill_transf(image)), 
-                                            batch_predict, # classification function
-                                            top_labels=5, 
-                                            hide_color=0, 
-                                            num_samples=1000)
-
-    temp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=True, num_features=2, hide_rest=False)
-    img_boundry1 = mark_boundaries(temp/255.0, mask)
-    temp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=False, num_features=2, hide_rest=False)
-    img_boundry2 = mark_boundaries(temp/255.0, mask)
-
-    # img_0 = Image.fromarray((img_boundry1 * 255).astype(np.uint8))
-    # st.image(img_0)
-    # img_0 = img_0.save("vgg_lime_0.png")
-
-    img_1 = Image.fromarray((img_boundry2 * 255).astype(np.uint8))
-    st.image(img_1)
-    img_1 = img_1.save("vgg_lime_1.png")
-    
-    with open("vgg_lime_1.png", "rb") as file:
-        vgg_lime_dwnld = st.download_button('Download LIME Images',
-                        file,
-                        "vgg_lime_1.png",
-                        mime="image/png")
+        with open("vgg_lime_1.png", "rb") as file:
+            vgg_lime_dwnld = st.download_button('Download LIME Images',
+                            file,
+                            "vgg_lime_1.png",
+                            mime="image/png")
+    st.success('Done!')
 
 #----------------------------------------------------------------------------
 #                         Captum Explainability
@@ -317,7 +327,48 @@ capt_button = st.button('Run Capt')
 
 if rn_pred == True and capt_button:
     
-        transformed_img = img_trans(rn50_img)
+        with st.spinner('Wait for it . . .'):
+            transformed_img = img_trans(rn50_img)
+
+            with torch.no_grad():
+                integrated_gradients = IntegratedGradients(model.cpu())
+                attributions_ig = integrated_gradients.attribute(input.cpu(), target=1)
+                    
+
+                occlusion = Occlusion(model.cpu())
+
+                attributions_occ = occlusion.attribute(input.cpu(),
+                                                    strides = (3, 8, 8),
+                                                    target=pred_label_idx,
+                                                    sliding_window_shapes=(3,15, 15),
+                                                    baselines=0)    
+
+                _ = viz.visualize_image_attr_multiple(np.transpose(attributions_occ.squeeze().cpu().detach().numpy(), (1,2,0)),
+                                                    np.transpose(transformed_img.squeeze().cpu().detach().numpy(), (1,2,0)),
+                                                    #["original_image", "heat_map"],
+                                                    ["original_image", "blended_heat_map"],
+                                                    ["all", "all"],
+                                                    show_colorbar=True,
+                                                    outlier_perc=2,
+                                                    )
+            plt.savefig("captum_rn.png")
+            st.pyplot()
+
+            with open("captum_rn.png", "rb") as file:
+                captum_dwnld = st.download_button('Download CAPT Images',
+                                file,
+                                "captum_rn.png",
+                                mime="image/png")
+        st.success('Done!')
+
+#----------------------------------------------------------------------------
+#                         VGG16 Captum
+#---------------------------------------------------------------------------- 
+
+if vgg_pred == True and capt_button:
+    
+    with st.spinner('Wait for it . . .'):
+        transformed_img = img_trans(image)
 
         with torch.no_grad():
             integrated_gradients = IntegratedGradients(model.cpu())
@@ -340,52 +391,28 @@ if rn_pred == True and capt_button:
                                                 show_colorbar=True,
                                                 outlier_perc=2,
                                                 )
-        plt.savefig("captum_rn.png")
+        plt.savefig("captum_vgg.png")
         st.pyplot()
 
-        with open("captum_rn.png", "rb") as file:
+        with open("captum_vgg.png", "rb") as file:
             captum_dwnld = st.download_button('Download CAPT Images',
                             file,
-                            "captum_rn.png",
+                            "captum_vgg.png",
                             mime="image/png")
+    st.success('Done!')
 
 #----------------------------------------------------------------------------
-#                         VGG16 Captum
-#---------------------------------------------------------------------------- 
+#                         Image to Text
+#----------------------------------------------------------------------------      
 
-if vgg_pred == True and capt_button:
-    
-    transformed_img = img_trans(image)
+st.header('Text Based Explanation')  
 
-    with torch.no_grad():
-        integrated_gradients = IntegratedGradients(model.cpu())
-        attributions_ig = integrated_gradients.attribute(input.cpu(), target=1)
-            
+text_button = st.button('Run Text Output')
 
-        occlusion = Occlusion(model.cpu())
+if text_button:
 
-        attributions_occ = occlusion.attribute(input.cpu(),
-                                            strides = (3, 8, 8),
-                                            target=pred_label_idx,
-                                            sliding_window_shapes=(3,15, 15),
-                                            baselines=0)    
-
-        _ = viz.visualize_image_attr_multiple(np.transpose(attributions_occ.squeeze().cpu().detach().numpy(), (1,2,0)),
-                                            np.transpose(transformed_img.squeeze().cpu().detach().numpy(), (1,2,0)),
-                                            #["original_image", "heat_map"],
-                                            ["original_image", "blended_heat_map"],
-                                            ["all", "all"],
-                                            show_colorbar=True,
-                                            outlier_perc=2,
-                                            )
-    plt.savefig("captum_vgg.png")
-    st.pyplot()
-
-    with open("captum_vgg.png", "rb") as file:
-        captum_dwnld = st.download_button('Download CAPT Images',
-                        file,
-                        "captum_vgg.png",
-                        mime="image/png")
+    st.write("Feature is coming soon!")
+    st.balloons()
 
 #----------------------------------------------------------------------------
 #                         End of File
