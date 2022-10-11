@@ -2,13 +2,11 @@
 #                                  Imports
 #----------------------------------------------------------------------------
 
-from cProfile import label
 import streamlit as st
 import pandas as pd
 import numpy as np
 import torchvision.transforms as transforms
 from PIL import Image
-import time
 
 import vgg16_model_streamlit
 from vgg16_model_streamlit import *
@@ -17,7 +15,6 @@ from resnet50_model_streamlit import *
 import vit_model_streamlit
 from vit_model_streamlit import *
 
-import matplotlib.pyplot as plt
 from pathlib import Path
 
 #----------------------------------------------------------------------------
@@ -54,6 +51,21 @@ device = get_device()
 st.write('Device used is:', device )
 
 #----------------------------------------------------------------------------
+#                         Image Uploader
+#----------------------------------------------------------------------------
+
+file = st.file_uploader('Select Image File')
+img_upload = False
+
+if file:
+    image = Image.open(file)
+
+    st.image(image)
+    width, height = image.size
+    st.write(width, height)
+    img_upload = True
+
+#----------------------------------------------------------------------------
 #                         Image Resize Function
 #----------------------------------------------------------------------------
 
@@ -67,8 +79,6 @@ def image_resize(image):
 #----------------------------------------------------------------------------
 #                         Radio Button
 #----------------------------------------------------------------------------
-
-st.header('Select a model to use')
 
 model_sel = st.radio(
     "Select Model to Use",
@@ -88,131 +98,26 @@ elif model_sel == 'ViT':
     st.write('Model being used is Vision Transformer')
 
 else:
-    model = None
-    st.write('No model selected')
+    st.write('Please select a model')
 
 # Radio button model selection verification debug
 # st.write(model)
 
 #----------------------------------------------------------------------------
-#                         Verify Model Selected
-#----------------------------------------------------------------------------
-
-st.header('Verify Model in use')
-
-model_print = st.button('Print Model')
-
-if model_print:
-
-    st.write(model)
-
-#----------------------------------------------------------------------------
-#                         Image Uploader
-#----------------------------------------------------------------------------
-
-st.header('Upload an image')
-
-file = st.file_uploader('Select Image File')
-img_upload = False
-
-if file:
-    image = Image.open(file)
-
-    st.image(image)
-    width, height = image.size
-    st.write(width, height)
-    img_upload = True
-
-
-#----------------------------------------------------------------------------
-#                 Model Predictions
-#----------------------------------------------------------------------------
-
-st.header('Model Predictions')
-
-# model_pred = st.button('Run Prediction')
-
-#----------------------------------------------------------------------------
 #                 Resnet50 Image Resize and Prediction
 #----------------------------------------------------------------------------
 
-rn_pred = False
+st.title('Model Predictions')
 
 if img_upload == True and model_sel == 'Resnet50':
-        
         rn50_img = image_resize(image)
         width, height = rn50_img.size
-        # st.write(width, height)
-        # st.image(rn50_img)
+        st.write(width, height)
+        st.image(rn50_img)
         input, output, prediction_score, predicted_label, pred_label_idx = rn50_load_image(rn50_img, model, device)
         
         st.write(predicted_label)
         st.write(prediction_score.squeeze().item())
-
-        rn_pred = True
-
-#----------------------------------------------------------------------------
-#                         VGG16 Prediction
-#----------------------------------------------------------------------------        
-
-vgg_pred = False
-
-if img_upload == True and model_sel == 'VGG16':
-
-    model = vgg16_model
-    input, pred_label_idx, predicted_label, prediction_score = load_image(image, model, device)
-    st.write(predicted_label)
-    st.write(prediction_score.squeeze().item())
-
-    vgg_pred = True
-
-#----------------------------------------------------------------------------
-#                         Vision Transformer Prediction
-#----------------------------------------------------------------------------  
-
-if img_upload == True and model_sel == 'ViT':
-
-    feature_extractor = ViTFeatureExtractor(vit_model)
-    encodings = feature_extractor(images=image, return_tensors="pt")
-        
-
-    with torch.no_grad():
-        feature_extractor = ViTFeatureExtractor(vit_path)
-        model = vit_model   
-
-        #inputs = feature_extractor(image, return_tensors="pt")
-        # model.eval()
-        inputs = torch.tensor(np.stack(feature_extractor(image)['pixel_values'], axis=0))
-        
-        inputs = inputs.to(device)
-        output = model(inputs)
-        loss, logits = model(inputs)
-        out = nn.Softmax()
-        pred_probab = nn.Softmax(dim=1)(loss)
-        y_pred = pred_probab.argmax(1)
-        
-    # image_data= logits.data.cpu().numpy()
-    # image_data = Image.fromarray((image_data * 255).astype(np.uint8))
-
-    y_pred = y_pred.cpu()
-    y_pred = y_pred.int()
-    st.write(pred_probab)
-    st.write(y_pred.item())
-    if y_pred.item() == 0:
-        st.write('something')  
-
-#----------------------------------------------------------------------------
-#                         LIME Interpretability
-#----------------------------------------------------------------------------  
-
-st.header('LIME Interpretability')  
-
-lime_button = st.button('Run Lime')
-
-#----------------------------------------------------------------------------
-#                 Resnet50 LIME
-#----------------------------------------------------------------------------
-if rn_pred == True and lime_button:
 
         def batch_predict(images):
             model.eval()
@@ -241,24 +146,53 @@ if rn_pred == True and lime_button:
         temp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=False, num_features=2, hide_rest=False)
         img_boundry2 = mark_boundaries(temp/255.0, mask)
 
-        # img_0 = Image.fromarray((img_boundry1 * 255).astype(np.uint8))
-        # st.image(img_0)
+        img_0 = Image.fromarray((img_boundry1 * 255).astype(np.uint8))
+        st.image(img_0)
 
         img_1 = Image.fromarray((img_boundry2 * 255).astype(np.uint8))
         st.image(img_1)
-        img_1 = img_1.save("rn_lime_1.png")
-    
-        with open("rn_lime_1.png", "rb") as file:
-            vgg_lime_dwnld = st.download_button('Download LIME Images',
-                        file,
-                        "rn_lime_1.png",
-                        mime="image/png")
-#----------------------------------------------------------------------------
-#                         VGG16 Lime
-#---------------------------------------------------------------------------- 
 
-if vgg_pred == True and lime_button:
-    
+        st.title('Captum Interpretability')
+
+
+#if lime_done == True:
+
+        transformed_img = img_trans(rn50_img)
+
+        with torch.no_grad():
+            integrated_gradients = IntegratedGradients(model.cpu())
+            attributions_ig = integrated_gradients.attribute(input.cpu(), target=1)
+                
+
+            occlusion = Occlusion(model.cpu())
+
+            attributions_occ = occlusion.attribute(input.cpu(),
+                                                strides = (3, 8, 8),
+                                                target=pred_label_idx,
+                                                sliding_window_shapes=(3,15, 15),
+                                                baselines=0)    
+
+            _ = viz.visualize_image_attr_multiple(np.transpose(attributions_occ.squeeze().cpu().detach().numpy(), (1,2,0)),
+                                                np.transpose(transformed_img.squeeze().cpu().detach().numpy(), (1,2,0)),
+                                                #["original_image", "heat_map"],
+                                                ["original_image", "blended_heat_map"],
+                                                ["all", "all"],
+                                                show_colorbar=True,
+                                                outlier_perc=2,
+                                                )
+        st.pyplot()
+
+#----------------------------------------------------------------------------
+#                         VGG16 Prediction
+#----------------------------------------------------------------------------        
+
+if img_upload == True and model_sel == 'VGG16':
+
+    model = vgg16_model
+    input, pred_label_idx, predicted_label, prediction_score = load_image(image, model, device)
+    st.write(predicted_label)
+    st.write(prediction_score.squeeze().item())
+
     def batch_predict(images):
 
         preprocess_transform = get_preprocess_transform()
@@ -289,71 +223,13 @@ if vgg_pred == True and lime_button:
     temp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=False, num_features=2, hide_rest=False)
     img_boundry2 = mark_boundaries(temp/255.0, mask)
 
-    # img_0 = Image.fromarray((img_boundry1 * 255).astype(np.uint8))
-    # st.image(img_0)
-    # img_0 = img_0.save("vgg_lime_0.png")
+    img_0 = Image.fromarray((img_boundry1 * 255).astype(np.uint8))
+    st.image(img_0)
 
     img_1 = Image.fromarray((img_boundry2 * 255).astype(np.uint8))
-    st.image(img_1)
-    img_1 = img_1.save("vgg_lime_1.png")
-    
-    with open("vgg_lime_1.png", "rb") as file:
-        vgg_lime_dwnld = st.download_button('Download LIME Images',
-                        file,
-                        "vgg_lime_1.png",
-                        mime="image/png")
+    st.image(img_1)    
 
-#----------------------------------------------------------------------------
-#                         Captum Explainability
-#---------------------------------------------------------------------------- 
-
-st.header('CAPTUM Explainability')  
-
-capt_button = st.button('Run Capt')
-
-#----------------------------------------------------------------------------
-#                         RN50 Captum
-#---------------------------------------------------------------------------- 
-
-if rn_pred == True and capt_button:
-    
-        transformed_img = img_trans(rn50_img)
-
-        with torch.no_grad():
-            integrated_gradients = IntegratedGradients(model.cpu())
-            attributions_ig = integrated_gradients.attribute(input.cpu(), target=1)
-                
-
-            occlusion = Occlusion(model.cpu())
-
-            attributions_occ = occlusion.attribute(input.cpu(),
-                                                strides = (3, 8, 8),
-                                                target=pred_label_idx,
-                                                sliding_window_shapes=(3,15, 15),
-                                                baselines=0)    
-
-            _ = viz.visualize_image_attr_multiple(np.transpose(attributions_occ.squeeze().cpu().detach().numpy(), (1,2,0)),
-                                                np.transpose(transformed_img.squeeze().cpu().detach().numpy(), (1,2,0)),
-                                                #["original_image", "heat_map"],
-                                                ["original_image", "blended_heat_map"],
-                                                ["all", "all"],
-                                                show_colorbar=True,
-                                                outlier_perc=2,
-                                                )
-        plt.savefig("captum_rn.png")
-        st.pyplot()
-
-        with open("captum_rn.png", "rb") as file:
-            captum_dwnld = st.download_button('Download CAPT Images',
-                            file,
-                            "captum_rn.png",
-                            mime="image/png")
-
-#----------------------------------------------------------------------------
-#                         VGG16 Captum
-#---------------------------------------------------------------------------- 
-
-if vgg_pred == True and capt_button:
+    st.title('Captum Interpretability')
     
     transformed_img = img_trans(image)
 
@@ -378,15 +254,10 @@ if vgg_pred == True and capt_button:
                                             show_colorbar=True,
                                             outlier_perc=2,
                                             )
-    plt.savefig("captum_vgg.png")
     st.pyplot()
 
-    with open("captum_vgg.png", "rb") as file:
-        captum_dwnld = st.download_button('Download CAPT Images',
-                        file,
-                        "captum_vgg.png",
-                        mime="image/png")
-
 #----------------------------------------------------------------------------
-#                         End of File
-#----------------------------------------------------------------------------     
+#                         Vision Transformer Prediction
+#----------------------------------------------------------------------------  
+
+        
