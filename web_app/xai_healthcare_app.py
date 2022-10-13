@@ -165,28 +165,36 @@ img_sel = st.selectbox(
     ('None', 'mf_0', 'mf_1', 'mf_2', 'nmf_0', 'nmf_1')
 )
 
+img_upload = False
+
 if img_sel == 'mf_0':
-    image = mf_0
+    image = Image.open(mf_0)
+    img_upload = True
     st.image(image)
 
 elif img_sel == 'mf_1':
-    image = mf_1
+    image = Image.open(mf_1)
+    img_upload = True
     st.image(image)
 
 elif img_sel == 'mf_2':
-    image = mf_2
+    image = Image.open(mf_2)
+    img_upload = True
     st.image(image)
 
 elif img_sel == 'nmf_0':
-    image = nmf_0
+    image = Image.open(nmf_0)
+    img_upload = True
     st.image(image)
 
 elif img_sel == 'nmf_1':
-    image = nmf_1
+    image = Image.open(nmf_1)
+    img_upload = True
     st.image(image)
 
 else:
-    model = None
+    # model = None
+    # img_upload = False
     st.write('No image selected')
 
 #----------------------------------------------------------------------------
@@ -197,7 +205,7 @@ else:
 st.subheader('Upload an image')
 
 file = st.file_uploader('Select Image File')
-img_upload = False
+# img_upload = False
 
 if file:
     image = Image.open(file)
