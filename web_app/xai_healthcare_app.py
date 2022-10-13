@@ -39,19 +39,50 @@ vit_model = vit_load_model(vit_path)
 # File load debug
 # st.write(vit_model)
 
+mf_0 = '/home/jmwolf/repos/XAI_Healthcare/model_dev/Data_CMC_COADEL_224_1/val/Mitosis/27031.jpg'
+
+mf_1 = '/home/jmwolf/repos/XAI_Healthcare/model_dev/Data_CMC_COADEL_224_1/val/Mitosis/1479.jpg'
+
+mf_2 = '/home/jmwolf/repos/XAI_Healthcare/model_dev/Data_CMC_COADEL_224_1/val/Mitosis/9662.jpg'
+
+nmf_0 = '/home/jmwolf/repos/XAI_Healthcare/model_dev/Data_CMC_COADEL_224_1/val/Nonmitosis/1438.jpg'
+
+nmf_1 = '/home/jmwolf/repos/XAI_Healthcare/model_dev/Data_CMC_COADEL_224_1/val/Nonmitosis/38058.jpg'
+
+#----------------------------------------------------------------------------
+#                         Sidebar
+#----------------------------------------------------------------------------
+
+with st.sidebar:
+    st.image(mf_0)
+    st.image(mf_1)
+    st.image(mf_2)
+    st.image(nmf_0)
+    st.image(nmf_1)
+
 #----------------------------------------------------------------------------
 #                         Title
 #----------------------------------------------------------------------------
 
 
 st.title('Mitotic Figure Detection')
+st.subheader('Authors')
+st.write('Jordan Wolf: jmwolf27@gmail.com')
+st.write('Arvinder Singh: contact@arvinderkang.com')
+st.write('Git Repo: https://github.com/jmwolf82/XAI_Healthcare')
+st.subheader('Proof of Concept')
+st.write('This work is a proof of concept limited to only relevant features\
+    due to presentation time constraints. The full version of the application\
+        contains expanded functionality for a more robust work flow. The goal of\
+            this work is to demonstrate capability towards the explanation of medical\
+                images with a focus on Mitotic Figure detection.')
 
 #----------------------------------------------------------------------------
 #                         Check CUDA Device GPU vs CPU
 #----------------------------------------------------------------------------
-st.header("Device Verification")
+st.subheader("Device Verification")
 device = get_device()
-st.write('Device used is:', device )
+st.write('The device being used is:', device )
 
 #----------------------------------------------------------------------------
 #                         Image Resize Function
@@ -65,10 +96,16 @@ def image_resize(image):
     return image_crop
 
 #----------------------------------------------------------------------------
+#                         Model Selection
+#----------------------------------------------------------------------------
+
+st.header('Model Selection:')
+
+#----------------------------------------------------------------------------
 #                         Radio Button
 #----------------------------------------------------------------------------
 
-st.header('Select a model to use')
+st.subheader('Select a model to use')
 
 model_sel = st.selectbox(
     'Select a model to use:',
@@ -103,7 +140,7 @@ else:
 #                         Verify Model Selected
 #----------------------------------------------------------------------------
 
-st.header('Verify Model in use')
+st.subheader('Verify Model in use')
 
 model_print = st.button('Print Model')
 
@@ -112,11 +149,52 @@ if model_print:
     st.write(model)
 
 #----------------------------------------------------------------------------
+#                         Image Selection
+#---------------------------------------------------------------------------- 
+
+st.header('Image Selection:')
+
+#----------------------------------------------------------------------------
+#                         Image Selector
+#----------------------------------------------------------------------------   
+
+st.subheader('Select a preloaded image to use')
+
+img_sel = st.selectbox(
+    'Select a preloaded image to use:',
+    ('None', 'mf_0', 'mf_1', 'mf_2', 'nmf_0', 'nmf_1')
+)
+
+if img_sel == 'mf_0':
+    image = mf_0
+    st.image(image)
+
+elif img_sel == 'mf_1':
+    image = mf_1
+    st.image(image)
+
+elif img_sel == 'mf_2':
+    image = mf_2
+    st.image(image)
+
+elif img_sel == 'nmf_0':
+    image = nmf_0
+    st.image(image)
+
+elif img_sel == 'nmf_1':
+    image = nmf_1
+    st.image(image)
+
+else:
+    model = None
+    st.write('No image selected')
+
+#----------------------------------------------------------------------------
 #                         Image Uploader
 #----------------------------------------------------------------------------
 
 
-st.header('Upload an image')
+st.subheader('Upload an image')
 
 file = st.file_uploader('Select Image File')
 img_upload = False
@@ -126,14 +204,32 @@ if file:
 
     st.image(image)
     width, height = image.size
-    st.write(width, height)
+    # st.write(width, height)
     img_upload = True
+
+#----------------------------------------------------------------------------
+#                 Confidence
+#----------------------------------------------------------------------------
+
+def confidence(percent):
+
+    if percent < 100.00 and percent > 90.00:
+        confidence = 'High confidence'
+    elif percent < 90.00 and percent > 80.00:
+        confidence = 'Medium confidence'
+    elif percent < 80.00 and percent > 70.00:
+        confidence = 'Average confidence'
+    elif percent < 70.00:
+        confidence = "Low confidence"
+
+    return confidence
+
 
 #----------------------------------------------------------------------------
 #                 Model Predictions
 #----------------------------------------------------------------------------
 
-st.header('Model Predictions')
+st.header('Model Predictions:')
 
 # model_pred = st.button('Run Prediction')
 
@@ -151,8 +247,17 @@ if img_upload == True and model_sel == 'Resnet50':
         # st.image(rn50_img)
         input, output, prediction_score, predicted_label, pred_label_idx = rn50_load_image(rn50_img, model, device)
         
-        st.write(predicted_label)
-        st.write(prediction_score.squeeze().item())
+        # st.write(predicted_label)
+        percent = (prediction_score.squeeze().item()*100)
+        # probability = ('%.2f' % percent, '%')
+        # st.write(prediction_score.squeeze().item())
+        conf = confidence(percent)
+        if predicted_label == '0':
+            st.write('Mitotic Figure detected in the image patch with ', '%.2f' % percent, '%', 'probability')
+            st.write(conf)
+            # st.write('%.2f' % percent, '%')
+        else:
+            st.write('Mitotic figure not detected in the image path')
 
         rn_pred = True
 
@@ -166,8 +271,17 @@ if img_upload == True and model_sel == 'VGG16':
 
     model = vgg16_model
     input, pred_label_idx, predicted_label, prediction_score = load_image(image, model, device)
-    st.write(predicted_label)
-    st.write(prediction_score.squeeze().item())
+    # st.write(predicted_label)
+    # st.write(prediction_score.squeeze().item())
+
+    percent = (prediction_score.squeeze().item()*100)
+    conf = confidence(percent)
+    if predicted_label == '0':
+        st.write('Mitotic Figure detected in the image patch with ', '%.2f' % percent, '%', 'probability')
+        st.write(conf)
+        # st.write('%.2f' % percent, '%')
+    else:
+        st.write('Mitotic figure not detected in the image path')
 
     vgg_pred = True
 
@@ -201,16 +315,48 @@ if img_upload == True and model_sel == 'ViT':
 
     y_pred = y_pred.cpu()
     y_pred = y_pred.int()
-    st.write(pred_probab)
-    st.write(y_pred.item())
+    probab_arry = pred_probab.cpu().numpy()
+    
+    # st.write(probab_arry[0][0])
+    # st.write(pred_probab)
+    # st.write(y_pred.item())
+    # if y_pred.item() == 0:
+    #     st.write('something')
+
     if y_pred.item() == 0:
-        st.write('something')  
+        
+        percent = (probab_arry[0][0] * 100)
+        conf = confidence(percent)
+        st.write('Mitotic Figure detected in the image patch', '%.2f' % percent, '%', 'probability')
+        st.write(conf)
+    else:
+        st.write('Mitotic figure not detected in the image path')
 
 #----------------------------------------------------------------------------
 #                         LIME Interpretability
 #----------------------------------------------------------------------------  
 
-st.header('LIME Interpretability')  
+st.header('Interpretability and Explainability:')
+
+#----------------------------------------------------------------------------
+#                         LIME Interpretability
+#----------------------------------------------------------------------------  
+
+st.subheader('LIME Interpretability')  
+
+st.write('Lime produces explanations created with local surrogate models. Lime is able\
+        is about to give a good measure of fidelity. This fidelity goes towards explaining\
+            the black box predictions of the model which are in the neighborhood of the \
+                data instance.')
+st.write('Lime however is disadvantageous because of its instability of explanations. When the\
+    explanation process is repeated, the resulting explanations also come out differently. Also\
+        changing the number of features used by Lime will also change the output further illustrating\
+            Lime instability. This is a known defect.')
+
+lime_features = st.slider(
+    'Select number of Lime features:',
+    2, 20
+)
 
 lime_button = st.button('Run Lime')
 
@@ -220,6 +366,7 @@ lime_button = st.button('Run Lime')
 if rn_pred == True and lime_button:
 
         with st.spinner('Wait for it . . .'):
+            st.write(lime_features)
             def batch_predict(images):
                 model.eval()
                 batch = torch.stack(tuple(preprocess_transform(i) for i in images), dim=0)
@@ -242,9 +389,9 @@ if rn_pred == True and lime_button:
                                                     hide_color=0, 
                                                     num_samples=1000)
 
-            temp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=True, num_features=2, hide_rest=False)
+            temp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=True, num_features=lime_features, hide_rest=False)
             img_boundry1 = mark_boundaries(temp/255.0, mask)
-            temp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=False, num_features=2, hide_rest=False)
+            temp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=False, num_features=lime_features, hide_rest=False)
             img_boundry2 = mark_boundaries(temp/255.0, mask)
 
             # img_0 = Image.fromarray((img_boundry1 * 255).astype(np.uint8))
@@ -317,7 +464,7 @@ if vgg_pred == True and lime_button:
 #                         Captum Explainability
 #---------------------------------------------------------------------------- 
 
-st.header('CAPTUM Explainability')  
+st.subheader('CAPTUM Explainability')  
 
 capt_button = st.button('Run Capt')
 
@@ -405,7 +552,7 @@ if vgg_pred == True and capt_button:
 #                         Image to Text
 #----------------------------------------------------------------------------      
 
-st.header('Text Based Explanation')  
+st.subheader('Text Based Explanation')  
 
 text_button = st.button('Run Text Output')
 
