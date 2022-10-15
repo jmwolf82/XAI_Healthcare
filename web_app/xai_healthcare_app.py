@@ -82,7 +82,9 @@ st.write('This work is a proof of concept limited to only relevant features\
 #----------------------------------------------------------------------------
 st.subheader("Device Verification")
 device = get_device()
+name = torch.cuda.get_device_name(device)
 st.write('The device being used is:', device )
+st.write(name)
 
 #----------------------------------------------------------------------------
 #                         Image Resize Function
