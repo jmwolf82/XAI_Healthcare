@@ -1,0 +1,3 @@
+[submodule "xai_healthcare_mlops"]
+	path = xai_healthcare_mlops
+	url = git@github.com:punjab/xai_healthcare_mlops.git
